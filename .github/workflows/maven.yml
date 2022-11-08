@@ -31,6 +31,9 @@ jobs:
       run: mvn -B package --file pom.xml
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.1
+    - name: Test Reporter
+      uses: dorny/test-reporter@v1.6.0      
+      if: github.event_name == 'push'
       with:
         # Artifact name
         name: deployable 
