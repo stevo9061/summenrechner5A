@@ -28,38 +28,17 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B install --file pom.xml
-      - name: Upload a Build Artifact
-        uses: actions/upload-artifact@v3
-        with:
-          # Artifact name
-          name: deployable
-          # A file, directory or wildcard pattern that describes what to upload
-          path: target/*.jar
+        run: mvn -B package --file pom.xml
+
+          #    - name: Upload a Build Artifact
+          #      uses: actions/upload-artifact@v3.1.1
+          #    - name: Test Reporter
+          #      uses: dorny/test-reporter@v1.6.0
+          #      if: github.event_name == 'push'
+          #      with:
+          #        # Artifact name
+          #        name: deployable
+          #        # A file, directory or wildcard pattern that describes what to upload
+          #        path: target/*.jar
           # The desired behavior if no files are found using the provided path.
-      - name: Test Reporter
-        uses: dorny/test-reporter@v1.6.0
-        if: success() || failure()
-        with:
-          # Name of the check run
-          name: unit-tests
-          path: target/surefire-reports/TEST-*.xml
-          reporter: java-junit
-      - name: Upload Jacoco Report
-        uses: actions/upload-artifact@v3.1.0
-        with:
-          # Artifact name
-          name: jacocoreport
-          path: target/site
-      - name: JaCoCo Code Coverage Report
-        id: jacoco_reporter
-        uses: PavanMudigonda/jacoco-reporter@v4.6
-        with:
-          coverage_results_path: target/site/jacoco/jacoco.xml
-          coverage_report_name: Coverage
-          coverage_report_title: JaCoCo
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          skip_check_run: false
-          minimum_coverage: 60
-          fail_below_threshold: false
-          publish_only_summary: false
+        # Optional: Uploads the full dependency graph to GitHub to improve the quality of Dependabot alerts this repository can receive
